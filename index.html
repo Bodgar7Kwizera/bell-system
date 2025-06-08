@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVHS Bell Schedule</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('/static/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .card {
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0); /* Fully transparent background */
+            box-shadow: 0 5px 50px rgba(0, 0, 0, 0.2); /* Oval-shaped shadow */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for distinction */
+        }
+
+        .card-header {
+            border-radius: 15px 15px 0 0;
+            background-color: rgba(0, 85, 160, 0.8); /* Darker semi-transparent blue */
+            position: relative;
+        }
+
+        .card-body {
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent body background */
+            border-radius: 0 0 15px 15px;
+        }
+
+        .btn {
+            border-radius: 50px;
+        }
+
+        table {
+            margin-top: 2rem;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 50px rgba(0, 0, 0, 0.2); /* Oval-shaped shadow */
+        }
+
+        thead {
+            background-color: #343a40;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        th, td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            font-size: 1.25rem; /* Increased font size */
+            transition: color 0.3s, transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+            padding: 10px 20px; /* Added padding */
+            border-radius: 5px; /* Slightly rounded corners */
+        }
+
+        .nav-link:hover {
+            color: #343a40 !important; /* Darker color on hover */
+            background-color: rgba(255, 255, 255, 0.7); /* Light background on hover */
+            transform: scale(1.2); /* More pronounced scale effect */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Box shadow on hover */
+        }
+
+        .nav {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        h1, h3 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-header text-white text-center">
+                <h1><span class="bell-emoji">🔔</span> NVHS Bell Schedule</h1>
+                <nav class="nav">
+                    <a class="nav-link text-white" href="/about">Crew Behind This!</a>
+                </nav>
+            </div>
+            <div class="card-body">
+                <form action="/add" method="post" class="form-inline justify-content-center mt-4 mb-4">
+                    <div class="form-group">
+                        <label for="day" class="mr-2">Day</label>
+                        <select name="day" id="day" class="form-control mr-2" required onchange="showSchedule()">
+                            <option value="">Select a day</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="time" class="mr-2">Time</label>
+                        <input type="time" name="time" id="time" class="form-control mr-2" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Time</button>
+                </form>
+                {% for day, times in timetable.items() %}
+                <div id="{{ day }}" class="schedule hidden">
+                    <h3 class="mt-4">{{ day }}</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Time</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for time in times %}
+                            <tr>
+                                <td>{{ time }}</td>
+                                <td><a href="/delete/{{ day }}/{{ time }}" class="btn btn-danger">Delete</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSchedule() {
+            const selectedDay = document.getElementById('day').value;
+            const schedules = document.querySelectorAll('.schedule');
+            schedules.forEach(schedule => {
+                if (schedule.id === selectedDay) {
+                    schedule.classList.remove('hidden');
+                } else {
+                    schedule.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
