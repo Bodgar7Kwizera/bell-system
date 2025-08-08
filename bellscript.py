@@ -21,9 +21,10 @@ def load_timetable():
 # Function to ring the bell
 def ring_bell():
     GPIO.output(17, GPIO.HIGH)
-    time.sleep(1)  # Ring the bell for 1 second
+    time.sleep(3)  # Ring the bell for 3 second
     GPIO.output(17, GPIO.LOW)
-
+    time.sleep(6)  # Ring the bell for 6 second
+    GPIO.output(17, GPIO.HIGH)
 # Main loop
 try:
     while True:
